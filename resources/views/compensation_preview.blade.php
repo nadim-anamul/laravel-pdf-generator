@@ -400,9 +400,9 @@
                     @endif
                     <div>
                         <label class="font-semibold text-gray-700">দখল উল্লেখ করা আছে কিনা:</label>
-                        <p class="text-gray-900">{{ $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
+                        <p class="text-gray-900">{{ ($deed['possession_mentioned'] ?? 'no') === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                     </div>
-                    @if($deed['possession_mentioned'] === 'yes')
+                    @if(($deed['possession_mentioned'] ?? 'no') === 'yes')
                     <div>
                         <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
                         <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
