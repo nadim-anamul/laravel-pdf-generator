@@ -24,21 +24,21 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             <div>
                 <label class="font-semibold text-gray-700">মামলা নম্বর:</label>
-                <p class="text-gray-900">{{ $compensation->case_number }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('case_number') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">মামলার তারিখ:</label>
-                <p class="text-gray-900">{{ $compensation->case_date }}</p>
+                <p class="text-gray-900">{{ $compensation->case_date_bengali }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">এলএ কেস নং:</label>
-                <p class="text-gray-900">{{ $compensation->la_case_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('la_case_no') }}</p>
             </div>
             @if($compensation->award_type && is_array($compensation->award_type) && in_array('জমি', $compensation->award_type))
                 @if($compensation->land_award_serial_no)
                 <div>
                     <label class="font-semibold text-gray-700">জমির রোয়েদাদ নং:</label>
-                    <p class="text-gray-900">{{ $compensation->land_award_serial_no }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliValue('land_award_serial_no') }}</p>
                 </div>
                 @endif
             @endif
@@ -46,7 +46,7 @@
                 @if($compensation->tree_award_serial_no)
                 <div>
                     <label class="font-semibold text-gray-700">গাছপালা/ফসলের রোয়েদাদ নং:</label>
-                    <p class="text-gray-900">{{ $compensation->tree_award_serial_no }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_award_serial_no') }}</p>
                 </div>
                 @endif
             @endif
@@ -54,7 +54,7 @@
                 @if($compensation->infrastructure_award_serial_no)
                 <div>
                     <label class="font-semibold text-gray-700">অবকাঠামোর রোয়েদাদ নং:</label>
-                    <p class="text-gray-900">{{ $compensation->infrastructure_award_serial_no }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</p>
                 </div>
                 @endif
             @endif
@@ -64,7 +64,7 @@
             </div>
             <div>
                 <label class="font-semibold text-gray-700">দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->plot_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('plot_no') }}</p>
             </div>
         </div>
     </div>
@@ -92,12 +92,12 @@
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">এন আই ডি:</label>
-                    <p class="text-gray-900">{{ $applicant['nid'] }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($applicant['nid']) }}</p>
                 </div>
                 @if(isset($applicant['mobile']) && $applicant['mobile'])
                 <div>
                     <label class="font-semibold text-gray-700">মোবাইল নং:</label>
-                    <p class="text-gray-900">{{ $applicant['mobile'] }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($applicant['mobile']) }}</p>
                 </div>
                 @endif
             </div>
@@ -153,7 +153,7 @@
                                 $totalLand += floatval($category['total_land'] ?? 0);
                             }
                         }
-                        echo number_format($totalLand, 6) . ' একর';
+                        echo $compensation->bnDigits(number_format($totalLand, 6)) . ' একর';
                     @endphp
                 </p>
             </div>
@@ -167,30 +167,30 @@
                                 $totalCompensation += floatval($category['total_compensation'] ?? 0);
                             }
                         }
-                        echo number_format($totalCompensation, 2) . ' টাকা';
+                        echo $compensation->bnDigits(number_format($totalCompensation, 2)) . ' টাকা';
                     @endphp
                 </p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">উৎস কর %:</label>
-                <p class="text-gray-900">{{ $compensation->source_tax_percentage }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('source_tax_percentage') }}</p>
             </div>
             @if($compensation->tree_compensation)
             <div>
                 <label class="font-semibold text-gray-700">গাছপালার মোট ক্ষতিপূরণ:</label>
-                <p class="text-gray-900">{{ $compensation->tree_compensation }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('tree_compensation') }}</p>
             </div>
             @endif
             @if($compensation->infrastructure_compensation)
             <div>
                 <label class="font-semibold text-gray-700">অবকাঠামোর মোট ক্ষতিপূরণ:</label>
-                <p class="text-gray-900">{{ $compensation->infrastructure_compensation }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('infrastructure_compensation') }}</p>
             </div>
             @endif
             @if($compensation->applicant_acquired_land)
             <div>
                 <label class="font-semibold text-gray-700">আবেদনকারীর অধিগ্রহণকৃত জমির পরিমাণ:</label>
-                <p class="text-gray-900">{{ $compensation->applicant_acquired_land }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('applicant_acquired_land') }}</p>
             </div>
             @endif
             @if($compensation->land_category && count($compensation->land_category) > 0)
@@ -206,15 +206,15 @@
                             </div>
                             <div>
                                 <span class="font-medium text-gray-600">মোট জমির পরিমাণ:</span>
-                                <span class="text-gray-900">{{ $category['total_land'] ?? '' }} একর</span>
+                                <span class="text-gray-900">{{ $compensation->bnDigits($category['total_land'] ?? '') }} একর</span>
                             </div>
                             <div>
                                 <span class="font-medium text-gray-600">মোট ক্ষতিপূরণ:</span>
-                                <span class="text-gray-900">{{ $category['total_compensation'] ?? '' }}</span>
+                                <span class="text-gray-900">{{ $compensation->bnDigits($category['total_compensation'] ?? '') }}</span>
                             </div>
                             <div>
                                 <span class="font-medium text-gray-600">আবেদনকারীর অধিগ্রহণকৃত জমি:</span>
-                                <span class="text-gray-900">{{ $category['applicant_land'] ? $category['applicant_land'] . ' একর' : 'তথ্য নেই' }}</span>
+                                <span class="text-gray-900">{{ $category['applicant_land'] ? $compensation->bnDigits($category['applicant_land']) . ' একর' : 'তথ্য নেই' }}</span>
                             </div>
                         </div>
                     </div>
@@ -231,21 +231,21 @@
             @if($compensation->acquisition_record_basis === 'SA')
             <div>
                 <label class="font-semibold text-gray-700">SA দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->sa_plot_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('sa_plot_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">SA খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->sa_khatian_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('sa_khatian_no') }}</p>
             </div>
             @endif
             @if($compensation->acquisition_record_basis === 'RS')
             <div>
                 <label class="font-semibold text-gray-700">RS দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->rs_plot_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('rs_plot_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">RS খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->rs_khatian_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('rs_khatian_no') }}</p>
             </div>
             @endif
             @if($compensation->objector_details)
@@ -277,33 +277,34 @@
             </div>
             <div>
                 <label class="font-semibold text-gray-700">জেএল নং:</label>
-                <p class="text-gray-900">{{ $compensation->jl_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('jl_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">এসএ খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->sa_khatian_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('sa_khatian_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">SA দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->land_schedule_sa_plot_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('land_schedule_sa_plot_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">আর এস খতিয়ান নং:</label>
-                <p class="text-gray-900">{{ $compensation->rs_khatian_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('rs_khatian_no') }}</p>
             </div>
             <div>
                 <label class="font-semibold text-gray-700">RS দাগ নং:</label>
-                <p class="text-gray-900">{{ $compensation->land_schedule_rs_plot_no }}</p>
+                <p class="text-gray-900">{{ $compensation->getBengaliValue('land_schedule_rs_plot_no') }}</p>
             </div>
         </div>
     </div>
 
     <!-- Ownership Continuity -->
-    @if($compensation->ownership_details)
     <div class="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-4">
         <h2 class="text-lg font-semibold mb-3 text-blue-600 border-b border-blue-200 pb-2">
             মালিকানার ধারাবাহিকতার বর্ণনা
         </h2>
+        
+        @if($compensation->ownership_details)
         
         <!-- Story Sequence Display - Show First -->
         @if(isset($compensation->ownership_details['storySequence']) && count($compensation->ownership_details['storySequence']) > 0)
@@ -333,19 +334,19 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                     <label class="font-semibold text-gray-700">SA দাগ নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_plot_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_plot_no') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">SA খতিয়ান নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_khatian_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_khatian_no') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">SA দাগে মোট জমি:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_total_land_in_plot'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_total_land_in_plot') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">SA উক্ত খতিয়ানে জমির পরিমাণ:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['sa_info']['sa_land_in_khatian'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_land_in_khatian') ?? '' }}</p>
                 </div>
             </div>
             
@@ -366,19 +367,19 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                     <label class="font-semibold text-gray-700">RS দাগ নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_plot_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.rs_info.rs_plot_no') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">RS খতিয়ান নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_khatian_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.rs_info.rs_khatian_no') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">RS দাগে মোট জমি:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_total_land_in_plot'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.rs_info.rs_total_land_in_plot') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">RS খতিয়ানে মোট জমির পরিমাণ:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['rs_info']['rs_land_in_khatian'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('ownership_details.rs_info.rs_land_in_khatian') ?? '' }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">ডিপি খতিয়ান:</label>
@@ -450,7 +451,7 @@
                                     </div>
                                     <div>
                                         <label class="font-semibold text-gray-700">দলিল নম্বর:</label>
-                                        <p class="text-gray-900">{{ $deed['deed_number'] ?? 'তথ্য নেই' }}</p>
+                                        <p class="text-gray-900">{{ $compensation->bnDigits($deed['deed_number'] ?? 'তথ্য নেই') }}</p>
                                     </div>
                                     <div>
                                         <label class="font-semibold text-gray-700">দলিলের তারিখ:</label>
@@ -473,10 +474,10 @@
                                         <p class="text-gray-900">{{ isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                                     </div>
                                     @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
-                                    <div>
-                                        <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
-                                        <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
-                                    </div>
+                                                                    <div>
+                                    <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($deed['possession_plot_no'] ?? '') }}</p>
+                                </div>
                                     <div class="md:col-span-2">
                                         <label class="font-semibold text-gray-700">দখল এর বর্ণনা:</label>
                                         <p class="text-gray-900">{{ $deed['possession_description'] ?? '' }}</p>
@@ -492,12 +493,12 @@
                                         <label class="font-semibold text-gray-700">আবেদনকৃত দাগে দখল উল্লেখ রয়েছে কিনা:</label>
                                         <p class="text-gray-900">{{ isset($deed['possession_application']) && $deed['possession_application'] === 'yes' ? 'হ্যাঁ' : 'না' }}</p>
                                     </div>
-                                    @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
-                                    <div>
-                                        <label class="font-semibold text-gray-700">যে সকল দাগে দখল উল্লেখ করা:</label>
-                                        <p class="text-gray-900">{{ $deed['mentioned_areas'] }}</p>
-                                    </div>
-                                    @endif
+                                                                    @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
+                                <div>
+                                    <label class="font-semibold text-gray-700">যে সকল দাগে দখল উল্লেখ করা:</label>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($deed['mentioned_areas']) }}</p>
+                                </div>
+                                @endif
                                     @if(isset($deed['special_details']) && $deed['special_details'])
                                     <div class="md:col-span-2">
                                         <label class="font-semibold text-gray-700">প্রযোজ্যক্ষেত্রে দলিলের বিশেষ বিবরণ:</label>
@@ -549,15 +550,15 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস দাগ নম্বর:</label>
-                                    <p class="text-gray-900">{{ $rs['plot_no'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['plot_no'] ?? '') }}</p>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস খতিয়ান নম্বর:</label>
-                                    <p class="text-gray-900">{{ $rs['khatian_no'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['khatian_no'] ?? '') }}</p>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস জমির পরিমাণ:</label>
-                                    <p class="text-gray-900">{{ $rs['land_amount'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['land_amount'] ?? '') }}</p>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="font-semibold text-gray-700">আরএস মালিকের নাম:</label>
@@ -624,7 +625,7 @@
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">দলিল নম্বর:</label>
-                                    <p class="text-gray-900">{{ $deed['deed_number'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($deed['deed_number'] ?? '') }}</p>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">দলিলের তারিখ:</label>
@@ -649,7 +650,7 @@
                                 @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
                                 <div>
                                     <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
-                                    <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($deed['possession_plot_no'] ?? '') }}</p>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="font-semibold text-gray-700">দখল এর বর্ণনা:</label>
@@ -669,7 +670,7 @@
                                 @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
                                 <div>
                                     <label class="font-semibold text-gray-700">যে সকল দাগে দখল উল্লেখ করা:</label>
-                                    <p class="text-gray-900">{{ $deed['mentioned_areas'] }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($deed['mentioned_areas']) }}</p>
                                 </div>
                                 @endif
                                 @if(isset($deed['special_details']) && $deed['special_details'])
@@ -722,15 +723,15 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস দাগ নম্বর:</label>
-                                    <p class="text-gray-900">{{ $rs['plot_no'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['plot_no'] ?? '') }}</p>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস খতিয়ান নম্বর:</label>
-                                    <p class="text-gray-900">{{ $rs['khatian_no'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['khatian_no'] ?? '') }}</p>
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস জমির পরিমাণ:</label>
-                                    <p class="text-gray-900">{{ $rs['land_amount'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['land_amount'] ?? '') }}</p>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="font-semibold text-gray-700">আরএস মালিকের নাম:</label>
@@ -778,7 +779,7 @@
                         </div>
                         <div>
                             <label class="font-semibold text-gray-700">দলিল নম্বর:</label>
-                            <p class="text-gray-900">{{ $deed['deed_number'] ?? '' }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($deed['deed_number'] ?? '') }}</p>
                         </div>
                         <div>
                             <label class="font-semibold text-gray-700">দলিলের তারিখ:</label>
@@ -803,7 +804,7 @@
                         @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'] === 'yes')
                         <div>
                             <label class="font-semibold text-gray-700">দখলের দাগ নম্বর:</label>
-                            <p class="text-gray-900">{{ $deed['possession_plot_no'] ?? '' }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($deed['possession_plot_no'] ?? '') }}</p>
                         </div>
                         <div class="md:col-span-2">
                             <label class="font-semibold text-gray-700">দখল এর বর্ণনা:</label>
@@ -823,7 +824,7 @@
                         @if(isset($deed['mentioned_areas']) && $deed['mentioned_areas'])
                         <div>
                             <label class="font-semibold text-gray-700">যে সকল দাগে দখল উল্লেখ করা:</label>
-                            <p class="text-gray-900">{{ $deed['mentioned_areas'] }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($deed['mentioned_areas']) }}</p>
                         </div>
                         @endif
                         @if(isset($deed['special_details']) && $deed['special_details'])
@@ -876,15 +877,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="font-semibold text-gray-700">আরএস দাগ নম্বর:</label>
-                            <p class="text-gray-900">{{ $rs['plot_no'] ?? '' }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($rs['plot_no'] ?? '') }}</p>
                         </div>
                         <div>
                             <label class="font-semibold text-gray-700">আরএস খতিয়ান নম্বর:</label>
-                            <p class="text-gray-900">{{ $rs['khatian_no'] ?? '' }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($rs['khatian_no'] ?? '') }}</p>
                         </div>
                         <div>
                             <label class="font-semibold text-gray-700">আরএস জমির পরিমাণ:</label>
-                            <p class="text-gray-900">{{ $rs['land_amount'] ?? '' }}</p>
+                            <p class="text-gray-900">{{ $compensation->bnDigits($rs['land_amount'] ?? '') }}</p>
                         </div>
                         <div class="md:col-span-2">
                             <label class="font-semibold text-gray-700">আরএস মালিকের নাম:</label>
@@ -917,15 +918,15 @@
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজ কেস নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['kharij_case_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_case_no'] ?? '') }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজ দাগ নম্বর:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['kharij_plot_no'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_plot_no'] ?? '') }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজ জমির পরিমাণ:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['kharij_land_amount'] ?? '' }}</p>
+                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_land_amount'] ?? '') }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজের তারিখ:</label>
@@ -938,6 +939,14 @@
             </div>
         </div>
         @endif
+    </div>
+    
+    @else
+    <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <p class="text-yellow-800">
+            <strong>Debug:</strong> ownership_details is null or empty. 
+            <br>Value: {{ var_export($compensation->ownership_details, true) }}
+        </p>
     </div>
     @endif
 
@@ -952,7 +961,7 @@
             <div>
                 <label class="font-semibold text-gray-700">হোল্ডিং নম্বর:</label>
                 @if(!empty($compensation->tax_info['holding_no'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['holding_no'] }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('tax_info.holding_no') }}</p>
                 @else
                     <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
@@ -960,7 +969,7 @@
             <div>
                 <label class="font-semibold text-gray-700">আবেদনকৃত দাগে খাজনা প্রদানকৃত জমির পরিমান (একরে)</label>
                 @if(!empty($compensation->tax_info['paid_land_amount'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['paid_land_amount'] }}</p>
+                    <p class="text-gray-900">{{ $compensation->getBengaliNestedValue('tax_info.paid_land_amount') }}</p>
                 @else
                     <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
@@ -968,7 +977,7 @@
             <div>
                 <label class="font-semibold text-gray-700">ইংরেজি বছর:</label>
                 @if(!empty($compensation->tax_info['english_year'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['english_year'] }}</p>
+                                                <p class="text-gray-900">{{ $compensation->bnDigits($compensation->tax_info['english_year']) }}</p>
                 @else
                     <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
@@ -976,7 +985,7 @@
             <div>
                 <label class="font-semibold text-gray-700">বাংলা বছর:</label>
                 @if(!empty($compensation->tax_info['bangla_year'] ?? ''))
-                    <p class="text-gray-900">{{ $compensation->tax_info['bangla_year'] }}</p>
+                                                <p class="text-gray-900">{{ $compensation->bnDigits($compensation->tax_info['bangla_year']) }}</p>
                 @else
                     <p class="text-red-500 italic">তথ্য নেই</p>
                 @endif
@@ -1156,7 +1165,7 @@
                     @endphp
                     
                     @if($hasTaxInfo)
-                        ইংরেজি {{ $compensation->tax_info['english_year'] }} এবং বাংলা {{ $compensation->tax_info['bangla_year'] }} সন পর্যন্ত {{ $compensation->tax_info['paid_land_amount'] }} একর জমির খাজনা পরিশোধ করা হয়েছে।
+                        ইংরেজি {{ $compensation->bnDigits($compensation->tax_info['english_year']) }} এবং বাংলা {{ $compensation->bnDigits($compensation->tax_info['bangla_year']) }} সন পর্যন্ত {{ $compensation->bnDigits($compensation->tax_info['paid_land_amount']) }} একর জমির খাজনা পরিশোধ করা হয়েছে।
                     @else
                         উল্লিখিত দাগে খাজনার রশিদ দাখিল করা হয়নাই
                     @endif
@@ -1169,7 +1178,7 @@
                 <p class="text-gray-800">
                     @foreach($compensation->ownership_details['deed_transfers'] as $deed)
                         @if(isset($deed['deed_number']) && !empty($deed['deed_number']))
-                            আবেদনকারীর দাখিলকৃত দলিল নং {{ $deed['deed_number'] }} তে উল্লিখিত দাগে দখল উল্লেখ করা 
+                            আবেদনকারীর দাখিলকৃত দলিল নং {{ $compensation->bnDigits($deed['deed_number']) }} তে উল্লিখিত দাগে দখল উল্লেখ করা 
                             @if(isset($deed['possession_mentioned']) && $deed['possession_mentioned'])
                                 রয়েছে
                             @else
@@ -1190,7 +1199,7 @@
             @endphp
             <div class="p-4 bg-gray-50 rounded-lg">
                 <p class="text-gray-800">
-                    আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত {{ $total_land }} একর জমির মধ্যে {{ $applicant_acquired_land }} একরের ক্ষতিপূরণ দাবী করেন।
+                    আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত {{ $compensation->bnDigits($total_land) }} একর জমির মধ্যে {{ $compensation->bnDigits($applicant_acquired_land) }} একরের ক্ষতিপূরণ দাবী করেন।
                 </p>
             </div>
             @endif
@@ -1248,7 +1257,7 @@
                             </div>
                             <div>
                                 <label class="font-semibold text-gray-700">অধিগ্রহণকৃত জমি (একর):</label>
-                                <p class="text-gray-900">{{ $category['acquired_land'] ?? '' }}</p>
+                                <p class="text-gray-900">{{ $compensation->bnDigits($category['acquired_land'] ?? '') }}</p>
                             </div>
                         </div>
                     </div>
@@ -1260,11 +1269,11 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div>
                                 <label class="font-semibold text-gray-700">দাগ নম্বর:</label>
-                                <p class="text-gray-900">{{ $record['plot_no'] ?? '' }}</p>
+                                <p class="text-gray-900">{{ $compensation->bnDigits($record['plot_no'] ?? '') }}</p>
                             </div>
                             <div>
                                 <label class="font-semibold text-gray-700">জমির পরিমাণ:</label>
-                                <p class="text-gray-900">{{ $record['area'] ?? '' }}</p>
+                                <p class="text-gray-900">{{ $compensation->bnDigits($record['area'] ?? '') }}</p>
                             </div>
                         </div>
                     </div>
@@ -1285,7 +1294,7 @@
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">ক্ষতিপূরণের পরিমাণ:</label>
-                        <p class="text-gray-900">{{ $compensation->final_order['trees_crops']['amount'] ?? '' }}</p>
+                        <p class="text-gray-900">{{ $compensation->bnDigits($compensation->final_order['trees_crops']['amount'] ?? '') }}</p>
                     </div>
                 </div>
             </div>
@@ -1303,7 +1312,7 @@
                     </div>
                     <div>
                         <label class="font-semibold text-gray-700">ক্ষতিপূরণের পরিমাণ:</label>
-                        <p class="text-gray-900">{{ $compensation->final_order['infrastructure']['amount'] ?? '' }}</p>
+                        <p class="text-gray-900">{{ $compensation->bnDigits($compensation->final_order['infrastructure']['amount'] ?? '') }}</p>
                     </div>
                 </div>
             </div>

@@ -29,14 +29,14 @@
                     @enderror
                 </div>
                 <div class="floating-label">
-                    <input type="number" :name="'applicants[' + index + '][nid]'" x-model="applicant.nid" placeholder=" " required min="0" maxlength="17">
+                    <input type="text" :name="'applicants[' + index + '][nid]'" x-model="applicant.nid" placeholder=" " required pattern="[০-৯0-9]+" maxlength="17" @input="formatNumberInput($event.target.value, $event.target)">
                     <label>এনআইডি নং<span class="text-red-500">*</span></label>
                     @error('applicants.*.nid')
                         <span class="text-red-500 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
                 <div class="floating-label">
-                    <input type="tel" :name="'applicants[' + index + '][mobile]'" x-model="applicant.mobile" placeholder=" " required pattern="[0-9]{11}" maxlength="11">
+                    <input type="text" :name="'applicants[' + index + '][mobile]'" x-model="applicant.mobile" placeholder=" " required pattern="[০-৯0-9]{11}" maxlength="11" @input="formatNumberInput($event.target.value, $event.target)">
                     <label>মোবাইল নং<span class="text-red-500">*</span></label>
                     @error('applicants.*.mobile')
                         <span class="text-red-500 text-sm">{{ $message }}</span>

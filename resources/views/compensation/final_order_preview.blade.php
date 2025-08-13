@@ -48,8 +48,8 @@
 
         <!-- Case Info -->
         <div class="flex justify-between mb-1">
-          <span>মামলার ধরন: ক্ষতিপূরণ কেস নং: {{ $compensation->case_number ?? 'N/A' }}</span> 
-          <span>এল.এ কেস: {{ $compensation->la_case_no ?? 'N/A' }}</span>
+          <span>মামলার ধরন: ক্ষতিপূরণ কেস নং: {{ $compensation->bnDigits($compensation->case_number ?? 'N/A') }}</span> 
+          <span>এল.এ কেস: {{ $compensation->bnDigits($compensation->la_case_no ?? 'N/A') }}</span>
         </div>
 
         <!-- Orders Table with wide second column -->
@@ -76,12 +76,12 @@
                           @if($index > 0)
                               , 
                           @endif
-                          প্রার্থী {{ $index + 1 }} {{ $applicant['name'] ?? '…………………………….' }}, পিং {{ $applicant['father_name'] ?? '…………………………….' }}, সাং: {{ $applicant['address'] ?? '…………………………….' }}
+                          প্রার্থী {{ $compensation->bnDigits($index + 1) }} {{ $applicant['name'] ?? '…………………………….' }}, পিং {{ $applicant['father_name'] ?? '…………………………….' }}, সাং: {{ $applicant['address'] ?? '…………………………….' }}
                       @endforeach
                   @else
                       প্রার্থী …………………………., পিং …………………………., সাং: ………………………….
                   @endif
-                  , উপজেলা: {{ $compensation->upazila ?? '…………………………….' }}, জেলা: {{ $compensation->district ?? '…………………………….' }}, {{ $compensation->la_case_no ?? '…………………………….' }} নং এল.এ কেসে অধিগ্রহণকৃত {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->jl_no ?? '…………………………….' }} মৌজার 
+                  , উপজেলা: {{ $compensation->upazila ?? '…………………………….' }}, জেলা: {{ $compensation->district ?? '…………………………….' }}, {{ $compensation->bnDigits($compensation->la_case_no ?? '…………………………….' ) }} নং এল.এ কেসে অধিগ্রহণকৃত {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->bnDigits($compensation->jl_no ?? '…………………………….' ) }} মৌজার 
                   @if($compensation->acquisition_record_basis === 'SA')
                       এসএ রেকর্ডমূলে অধিগ্রহণ
                   @elseif($compensation->acquisition_record_basis === 'RS')
@@ -89,8 +89,8 @@
                   @else
                       ………………………….
                   @endif
-                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->sa_khatian_no ?? '…………………………….' ) : ($compensation->rs_khatian_no ?? '…………………………….' ) }} নং খতিয়ানের 
-                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->land_schedule_sa_plot_no ?? '…………………………….' ) : ($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }} নং দাগের 
+                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->sa_khatian_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->rs_khatian_no ?? '…………………………….' )) }} নং খতিয়ানের 
+                  {{ $compensation->acquisition_record_basis === 'SA' ? ($compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' )) : ($compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' )) }} নং দাগের 
                   @if($compensation->award_type && is_array($compensation->award_type) && count($compensation->award_type) > 0)
                       @foreach($compensation->award_type as $index => $type)
                           @if($index > 0)
@@ -119,13 +119,13 @@
                       @else
                           …………………………. নং ক্রমিকে
                       @endif
-                      {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->jl_no ?? '…………………………….' }} মৌজার 
+                      {{ $compensation->mouza_name ?? '…………………………….' }}/{{ $compensation->bnDigits($compensation->jl_no ?? '…………………………….' ) }} মৌজার 
                       @if($compensation->acquisition_record_basis === 'SA')
-                          {{ $compensation->land_schedule_sa_plot_no ?? '…………………………….' }}
-                      @elseif($compensation->acquisition_record_basis === 'RS')
-                          {{ $compensation->land_schedule_rs_plot_no ?? '…………………………….' }}
-                      @else
-                          {{ $compensation->plot_no ?? '…………………………….' }}
+                          {{ $compensation->bnDigits($compensation->land_schedule_sa_plot_no ?? '…………………………….' ) }}
+                                              @elseif($compensation->acquisition_record_basis === 'RS')
+                            {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no ?? '…………………………….' ) }}
+                                              @else
+                            {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }}
                       @endif
                       নং দাগের 
                       @if($compensation->land_category && is_array($compensation->land_category))
@@ -134,7 +134,7 @@
                                   return floatval($category['total_land'] ?? 0);
                               });
                           @endphp
-                          {{ number_format($totalLand, 4) }}
+                          {{ $compensation->bnDigits(number_format($totalLand, 4)) }}
                       @else
                           ………………………….
                       @endif
@@ -156,12 +156,12 @@
                   @if($compensation->award_type && is_array($compensation->award_type) && in_array('গাছপালা/ফসল', $compensation->award_type))
                       গাছপালার/ফসলের রোয়েদাদের 
                       @if($compensation->tree_award_serial_no)
-                          {{ str_pad((string)$compensation->tree_award_serial_no, 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
+                          {{ $compensation->bnDigits(str_pad((string)$compensation->tree_award_serial_no, 6, '0', STR_PAD_LEFT)) }} নং ক্রমিকে
                       @else
                           …………………………. নং ক্রমিকে
                       @endif
                       @if($compensation->tree_compensation)
-                          {{ str_pad((string)number_format($compensation->tree_compensation, 0), 6, '0', STR_PAD_LEFT) }}
+                          {{ $compensation->bnDigits(str_pad((string)number_format($compensation->tree_compensation, 0), 6, '0', STR_PAD_LEFT)) }}
                       @else
                           ………………………….
                       @endif
@@ -174,12 +174,12 @@
                   @if($compensation->award_type && is_array($compensation->award_type) && in_array('অবকাঠামো', $compensation->award_type))
                       অবকাঠামোর রোয়েদাদের 
                       @if($compensation->infrastructure_award_serial_no)
-                          {{ str_pad((string)$compensation->infrastructure_award_serial_no, 6, '0', STR_PAD_LEFT) }} নং ক্রমিকে
+                          {{ $compensation->bnDigits(str_pad((string)$compensation->infrastructure_award_serial_no, 6, '0', STR_PAD_LEFT)) }} নং ক্রমিকে
                       @else
                           …………………………. নং ক্রমিকে
                       @endif
                       @if($compensation->infrastructure_compensation)
-                          {{ str_pad((string)number_format($compensation->infrastructure_compensation, 0), 6, '0', STR_PAD_LEFT) }}
+                          {{ $compensation->bnDigits(str_pad((string)number_format($compensation->infrastructure_compensation, 0), 6, '0', STR_PAD_LEFT)) }}
                       @else
                           ………………………….
                       @endif
@@ -200,7 +200,7 @@
                       <div class="ml-4 mt-2">
                           <strong>১. এসএ রেকর্ডের বর্ণনাঃ</strong> 
                           @if($compensation->sa_khatian_no && $compensation->land_schedule_sa_plot_no)
-                              নালিশী সাবেক {{ $compensation->land_schedule_sa_plot_no }} নং দাগের হাল {{ $compensation->plot_no ?? '…………………………….' }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4) : '…………………………….' }} একর জমি 
+                              নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_sa_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
                               @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
                                   {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
                               @else
@@ -215,7 +215,7 @@
                       <div class="ml-4 mt-2">
                           <strong>১. আরএস রেকর্ডের বর্ণনাঃ</strong> 
                           @if($compensation->rs_khatian_no && $compensation->land_schedule_rs_plot_no)
-                              নালিশী সাবেক {{ $compensation->land_schedule_rs_plot_no }} নং দাগের হাল {{ $compensation->plot_no ?? '…………………………….' }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4) : '…………………………….' }} একর জমি 
+                              নালিশী সাবেক {{ $compensation->bnDigits($compensation->land_schedule_rs_plot_no) }} নং দাগের হাল {{ $compensation->bnDigits($compensation->plot_no ?? '…………………………….' ) }} নং দাগে {{ $compensation->land_category && is_array($compensation->land_category) ? $compensation->bnDigits(number_format(collect($compensation->land_category)->sum(function($category) { return floatval($category['total_land'] ?? 0); }), 4)) : '…………………………….' }} একর জমি 
                               @if($compensation->award_holder_names && is_array($compensation->award_holder_names) && count($compensation->award_holder_names) > 0)
                                   {{ $compensation->award_holder_names[0]['name'] ?? '…………………………….' }} পিং-{{ $compensation->award_holder_names[0]['father_name'] ?? '…………………………….' }}
                               @else
@@ -533,15 +533,15 @@
                               $finalAmount = $totalCompensation - $sourceTax;
                               
                               // Get plot and khatian numbers
-                              $plotNo = $compensation->plot_no ?? '……………………………';
+                              $plotNo = $compensation->bnDigits($compensation->plot_no ?? '……………………………');
                               $khatianNo = $compensation->acquisition_record_basis === 'SA' ? 
-                                          ($compensation->sa_khatian_no ?? '……………………………') : 
-                                          ($compensation->rs_khatian_no ?? '……………………………');
+                                          $compensation->bnDigits($compensation->sa_khatian_no ?? '……………………………') : 
+                                          $compensation->bnDigits($compensation->rs_khatian_no ?? '……………………………');
                               
                               // Get award serial numbers - ensure they are properly retrieved
-                              $landAwardNo = !empty($landAwardSerialNo) ? $landAwardSerialNo : '……………………………';
-                              $treeAwardNo = !empty($treeAwardSerialNo) ? $treeAwardSerialNo : '……………………………';
-                              $infrastructureAwardNo = !empty($infrastructureAwardSerialNo) ? $infrastructureAwardSerialNo : '……………………………';
+                              $landAwardNo = !empty($landAwardSerialNo) ? $compensation->bnDigits($landAwardSerialNo) : '……………………………';
+                              $treeAwardNo = !empty($treeAwardSerialNo) ? $compensation->bnDigits($treeAwardSerialNo) : '……………………………';
+                              $infrastructureAwardNo = !empty($infrastructureAwardSerialNo) ? $compensation->bnDigits($infrastructureAwardSerialNo) : '……………………………';
                           @endphp
                           
                           <!-- Land Compensation Row -->
@@ -551,21 +551,21 @@
                               <td class="border border-black p-2 text-center">{{ $khatianNo }}</td>
                               <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
                               <td class="border border-black p-2 text-center">
-                                  {{ number_format($finalOrderLand, 4) }} একর @if(!empty($acquiredLandType)) ({{ $acquiredLandType }}) @endif
+                                  {{ $compensation->bnDigits(number_format($finalOrderLand, 4)) }} একর @if(!empty($acquiredLandType)) ({{ $acquiredLandType }}) @endif
                               </td>
                               <td class="border border-black p-2 text-center">
                                   @if($compensation->land_category && is_array($compensation->land_category))
                                       @foreach($compensation->land_category as $index => $category)
                                           @if($index == 0)
-                                              {{ number_format(floatval($category['total_land'] ?? 0), 4) }} একর @if(!empty($acquiredLandType)) ({{ $acquiredLandType }}) @endif
+                                              {{ $compensation->bnDigits(number_format(floatval($category['total_land'] ?? 0), 4)) }} একর @if(!empty($acquiredLandType)) ({{ $acquiredLandType }}) @endif
                                           @endif
                                       @endforeach
                                   @else
-                                      {{ number_format($finalOrderLand, 4) }} একর
+                                      {{ $compensation->bnDigits(number_format($finalOrderLand, 4)) }} একর
                                   @endif
                                   জমির ক্ষতিপূরণ বাবদ
                               </td>
-                              <td class="border border-black p-2 text-center">{{ number_format($landCompensation, 2) }}</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($landCompensation, 2)) }}</td>
                           </tr>
                           @endif
                           
@@ -577,7 +577,7 @@
                               <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
                               <td class="border border-black p-2 text-center">-</td>
                               <td class="border border-black p-2 text-center">গাছপালা/ফসলের ক্ষতিপূরণ বাবদ</td>
-                              <td class="border border-black p-2 text-center">{{ number_format($treeCompensation, 2) }}</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($treeCompensation, 2)) }}</td>
                           </tr>
                           @endif
                           
@@ -589,26 +589,26 @@
                               <td class="border border-black p-2 text-center">{{ $plotNo }}</td>
                               <td class="border border-black p-2 text-center">-</td>
                               <td class="border border-black p-2 text-center">অবকাঠামোর ক্ষতিপূরণ বাবদ</td>
-                              <td class="border border-black p-2 text-center">{{ number_format($infrastructureCompensation, 2) }}</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($infrastructureCompensation, 2)) }}</td>
                           </tr>
                           @endif
                           
                           <!-- Total Row -->
                           <tr class="font-bold">
                               <td class="border border-black p-2 text-center" colspan="5">উৎস করসহ মোট প্রদেয় =</td>
-                              <td class="border border-black p-2 text-center">{{ number_format($totalCompensation, 2) }}</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($totalCompensation, 2)) }}</td>
                           </tr>
                           
                           <!-- Source Tax Row -->
                           <tr>
-                              <td class="border border-black p-2 text-center" colspan="5">{{ $compensation->source_tax_percentage }}% উৎস কর (-)</td>
-                              <td class="border border-black p-2 text-center">{{ number_format($sourceTax, 2) }}</td>
+                              <td class="border border-black p-2 text-center" colspan="5">{{ $compensation->bnDigits($compensation->source_tax_percentage) }}% উৎস কর (-)</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($sourceTax, 2)) }}</td>
                           </tr>
                           
                           <!-- Final Amount Row -->
                           <tr class="font-bold">
                               <td class="border border-black p-2 text-center" colspan="5">উৎস কর বাদে প্রদেয় টাকা =</td>
-                              <td class="border border-black p-2 text-center">{{ number_format($finalAmount, 2) }}</td>
+                              <td class="border border-black p-2 text-center">{{ $compensation->bnDigits(number_format($finalAmount, 2)) }}</td>
                           </tr>
                       </tbody>
                   </table>

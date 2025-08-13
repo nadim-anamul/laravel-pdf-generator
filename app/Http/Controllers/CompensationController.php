@@ -270,16 +270,16 @@ class CompensationController extends Controller
             // Land Category
             'land_category' => 'nullable|array',
             'land_category.*.category_name' => 'required|string|max:255',
-            'land_category.*.total_land' => 'required|numeric|min:0',
-            'land_category.*.total_compensation' => 'required|numeric|min:0',
-            'land_category.*.applicant_land' => 'nullable|numeric|min:0',
+            'land_category.*.total_land' => 'required|string|max:255',
+            'land_category.*.total_compensation' => 'required|string|max:255',
+            'land_category.*.applicant_land' => 'nullable|string|max:255',
             
             // Additional Information
             'objector_details' => 'nullable|string',
             'is_applicant_in_award' => 'required|boolean',
-            'source_tax_percentage' => 'required|numeric|min:0|max:100',
-            'tree_compensation' => 'nullable|numeric|min:0',
-            'infrastructure_compensation' => 'nullable|numeric|min:0',
+            'source_tax_percentage' => 'required|string|max:255',
+            'tree_compensation' => 'nullable|string|max:255',
+            'infrastructure_compensation' => 'nullable|string|max:255',
             'district' => 'required|string|max:255',
             'upazila' => 'required|string|max:255',
             'mouza_name' => 'required|string|max:255',
@@ -319,6 +319,9 @@ class CompensationController extends Controller
     {
         // Process Bengali dates
         $data = $this->processBengaliDates($data);
+        
+        // Process Bengali numbers - convert to English for calculations
+        $data = $this->processBengaliNumbers($data);
 
         // Convert award_type string to array for database storage
         if (isset($data['award_type'])) {
@@ -341,9 +344,253 @@ class CompensationController extends Controller
             $this->validateAdditionalDocuments($data['additional_documents_info']);
         }
 
+                return $data;
+    }
+    
+    /**
+     * Process Bengali numbers - convert to English for calculations
+     */
+    private function processBengaliNumbers(array $data)
+    {
+        // Process basic case information
+        if (isset($data['case_number'])) {
+            $data['case_number'] = $this->enDigits($data['case_number']);
+        }
+        if (isset($data['case_date'])) {
+            $data['case_date'] = $this->enDigits($data['case_date']);
+        }
+        if (isset($data['la_case_no'])) {
+            $data['la_case_no'] = $this->enDigits($data['la_case_no']);
+        }
+        if (isset($data['plot_no'])) {
+            $data['plot_no'] = $this->enDigits($data['plot_no']);
+        }
+        if (isset($data['sa_plot_no'])) {
+            $data['sa_plot_no'] = $this->enDigits($data['sa_plot_no']);
+        }
+        if (isset($data['rs_plot_no'])) {
+            $data['rs_plot_no'] = $this->enDigits($data['rs_plot_no']);
+        }
+        if (isset($data['land_award_serial_no'])) {
+            $data['land_award_serial_no'] = $this->enDigits($data['land_award_serial_no']);
+        }
+        if (isset($data['tree_award_serial_no'])) {
+            $data['tree_award_serial_no'] = $this->enDigits($data['tree_award_serial_no']);
+        }
+        if (isset($data['infrastructure_award_serial_no'])) {
+            $data['infrastructure_award_serial_no'] = $this->enDigits($data['infrastructure_award_serial_no']);
+        }
+        if (isset($data['district'])) {
+            $data['district'] = $this->enDigits($data['district']);
+        }
+        if (isset($data['upazila'])) {
+            $data['upazila'] = $this->enDigits($data['upazila']);
+        }
+        if (isset($data['jl_no'])) {
+            $data['jl_no'] = $this->enDigits($data['jl_no']);
+        }
+        if (isset($data['sa_khatian_no'])) {
+            $data['sa_khatian_no'] = $this->enDigits($data['sa_khatian_no']);
+        }
+        if (isset($data['rs_khatian_no'])) {
+            $data['rs_khatian_no'] = $this->enDigits($data['rs_khatian_no']);
+        }
+        if (isset($data['land_schedule_sa_plot_no'])) {
+            $data['land_schedule_sa_plot_no'] = $this->enDigits($data['land_schedule_sa_plot_no']);
+        }
+        if (isset($data['land_schedule_rs_plot_no'])) {
+            $data['land_schedule_rs_plot_no'] = $this->enDigits($data['land_schedule_rs_plot_no']);
+        }
+        
+        // Process applicants
+        if (isset($data['applicants']) && is_array($data['applicants'])) {
+            foreach ($data['applicants'] as &$applicant) {
+                if (isset($applicant['nid'])) {
+                    $applicant['nid'] = $this->enDigits($applicant['nid']);
+                }
+                if (isset($applicant['mobile'])) {
+                    $applicant['mobile'] = $this->enDigits($applicant['mobile']);
+                }
+            }
+        }
+        
+        // Process land category numbers
+        if (isset($data['land_category']) && is_array($data['land_category'])) {
+            foreach ($data['land_category'] as &$category) {
+                if (isset($category['total_land'])) {
+                    $category['total_land'] = $this->enDigits($category['total_land']);
+                }
+                if (isset($category['total_compensation'])) {
+                    $category['total_compensation'] = $this->enDigits($category['total_compensation']);
+                }
+                if (isset($category['applicant_land'])) {
+                    $category['applicant_land'] = $this->enDigits($category['applicant_land']);
+                }
+            }
+        }
+        
+        // Process compensation amounts
+        if (isset($data['tree_compensation'])) {
+            $data['tree_compensation'] = $this->enDigits($data['tree_compensation']);
+        }
+        if (isset($data['infrastructure_compensation'])) {
+            $data['infrastructure_compensation'] = $this->enDigits($data['infrastructure_compensation']);
+        }
+        if (isset($data['source_tax_percentage'])) {
+            $data['source_tax_percentage'] = $this->enDigits($data['source_tax_percentage']);
+        }
+        
+        // Process ownership details numbers
+        if (isset($data['ownership_details']) && is_array($data['ownership_details'])) {
+            // Process SA info
+            if (isset($data['ownership_details']['sa_info']) && is_array($data['ownership_details']['sa_info'])) {
+                if (isset($data['ownership_details']['sa_info']['sa_plot_no'])) {
+                    $data['ownership_details']['sa_info']['sa_plot_no'] = $this->enDigits($data['ownership_details']['sa_info']['sa_plot_no']);
+                }
+                if (isset($data['ownership_details']['sa_info']['sa_khatian_no'])) {
+                    $data['ownership_details']['sa_info']['sa_khatian_no'] = $this->enDigits($data['ownership_details']['sa_info']['sa_khatian_no']);
+                }
+                if (isset($data['ownership_details']['sa_info']['sa_total_land_in_plot'])) {
+                    $data['ownership_details']['sa_info']['sa_total_land_in_plot'] = $this->enDigits($data['ownership_details']['sa_info']['sa_total_land_in_plot']);
+                }
+                if (isset($data['ownership_details']['sa_info']['sa_land_in_khatian'])) {
+                    $data['ownership_details']['sa_info']['sa_land_in_khatian'] = $this->enDigits($data['ownership_details']['sa_info']['sa_land_in_khatian']);
+                }
+            }
+            
+            // Process RS info
+            if (isset($data['ownership_details']['rs_info']) && is_array($data['ownership_details']['rs_info'])) {
+                if (isset($data['ownership_details']['rs_info']['rs_plot_no'])) {
+                    $data['ownership_details']['rs_info']['rs_plot_no'] = $this->enDigits($data['ownership_details']['rs_info']['rs_plot_no']);
+                }
+                if (isset($data['ownership_details']['rs_info']['rs_khatian_no'])) {
+                    $data['ownership_details']['rs_info']['rs_khatian_no'] = $this->enDigits($data['ownership_details']['rs_info']['rs_khatian_no']);
+                }
+                if (isset($data['ownership_details']['rs_info']['rs_total_land_in_plot'])) {
+                    $data['ownership_details']['rs_info']['rs_total_land_in_plot'] = $this->enDigits($data['ownership_details']['rs_info']['rs_total_land_in_plot']);
+                }
+                if (isset($data['ownership_details']['rs_info']['rs_land_in_khatian'])) {
+                    $data['ownership_details']['rs_info']['rs_land_in_khatian'] = $this->enDigits($data['ownership_details']['rs_info']['rs_land_in_khatian']);
+                }
+            }
+            
+            // Process deed transfers
+            if (isset($data['ownership_details']['deed_transfers']) && is_array($data['ownership_details']['deed_transfers'])) {
+                foreach ($data['ownership_details']['deed_transfers'] as &$deed) {
+                    if (isset($deed['deed_number'])) {
+                        $deed['deed_number'] = $this->enDigits($deed['deed_number']);
+                    }
+                    if (isset($deed['deed_date'])) {
+                        $deed['deed_date'] = $this->enDigits($deed['deed_date']);
+                    }
+                    if (isset($deed['application_sell_area'])) {
+                        $deed['application_sell_area'] = $this->enDigits($deed['application_sell_area']);
+                    }
+                    if (isset($deed['application_total_area'])) {
+                        $deed['application_total_area'] = $this->enDigits($deed['application_total_area']);
+                    }
+                    if (isset($deed['application_sell_area_other'])) {
+                        $deed['application_sell_area_other'] = $this->enDigits($deed['application_sell_area_other']);
+                    }
+                }
+            }
+            
+            // Process RS records
+            if (isset($data['ownership_details']['rs_records']) && is_array($data['ownership_details']['rs_records'])) {
+                foreach ($data['ownership_details']['rs_records'] as &$rs) {
+                    if (isset($rs['plot_no'])) {
+                        $rs['plot_no'] = $this->enDigits($rs['plot_no']);
+                    }
+                    if (isset($rs['khatian_no'])) {
+                        $rs['khatian_no'] = $this->enDigits($rs['khatian_no']);
+                    }
+                    if (isset($rs['land_amount'])) {
+                        $rs['land_amount'] = $this->enDigits($rs['land_amount']);
+                    }
+                    if (isset($rs['total_land_in_plot'])) {
+                        $rs['total_land_in_plot'] = $this->enDigits($rs['total_land_in_plot']);
+                    }
+                    if (isset($rs['land_in_khatian'])) {
+                        $rs['land_in_khatian'] = $this->enDigits($rs['land_in_khatian']);
+                    }
+                }
+            }
+            
+            // Process applicant info
+            if (isset($data['ownership_details']['applicant_info']['kharij_land_amount'])) {
+                $data['ownership_details']['applicant_info']['kharij_land_amount'] = 
+                    $this->enDigits($data['ownership_details']['applicant_info']['kharij_land_amount']);
+            }
+            
+            // Process inheritance records
+            if (isset($data['ownership_details']['inheritance_records']) && is_array($data['ownership_details']['inheritance_records'])) {
+                foreach ($data['ownership_details']['inheritance_records'] as &$inheritance) {
+                    if (isset($inheritance['land_amount'])) {
+                        $inheritance['land_amount'] = $this->enDigits($inheritance['land_amount']);
+                    }
+                    if (isset($inheritance['total_land_in_plot'])) {
+                        $inheritance['total_land_in_plot'] = $this->enDigits($inheritance['total_land_in_plot']);
+                    }
+                    if (isset($inheritance['land_in_khatian'])) {
+                        $inheritance['land_in_khatian'] = $this->enDigits($inheritance['land_in_khatian']);
+                    }
+                }
+            }
+        }
+        
+        // Process tax info numbers
+        if (isset($data['tax_info']) && is_array($data['tax_info'])) {
+            if (isset($data['tax_info']['holding_no'])) {
+                $data['tax_info']['holding_no'] = $this->enDigits($data['tax_info']['holding_no']);
+            }
+            if (isset($data['tax_info']['paid_land_amount'])) {
+                $data['tax_info']['paid_land_amount'] = $this->enDigits($data['tax_info']['paid_land_amount']);
+            }
+        }
+        
+        // Process mutation info numbers
+        if (isset($data['mutation_info']) && is_array($data['mutation_info'])) {
+            foreach ($data['mutation_info'] as &$mutation) {
+                if (isset($mutation['land_amount'])) {
+                    $mutation['land_amount'] = $this->enDigits($mutation['land_amount']);
+                }
+                if (isset($mutation['total_land_in_plot'])) {
+                    $mutation['total_land_in_plot'] = $this->enDigits($mutation['total_land_in_plot']);
+                }
+                if (isset($mutation['land_in_khatian'])) {
+                    $mutation['land_in_khatian'] = $this->enDigits($mutation['land_in_khatian']);
+                }
+            }
+        }
+        
+        // Process final order numbers
+        if (isset($data['final_order']) && is_array($data['final_order'])) {
+            if (isset($data['final_order']['trees_crops']['amount'])) {
+                $data['final_order']['trees_crops']['amount'] = $this->enDigits($data['final_order']['trees_crops']['amount']);
+            }
+            if (isset($data['final_order']['infrastructure']['amount'])) {
+                $data['final_order']['infrastructure']['amount'] = $this->enDigits($data['final_order']['infrastructure']['amount']);
+            }
+        }
+        
+        // Process kanungo opinion numbers
+        if (isset($data['kanungo_opinion']) && is_array($data['kanungo_opinion'])) {
+            foreach ($data['kanungo_opinion'] as &$opinion) {
+                if (isset($opinion['land_amount'])) {
+                    $opinion['land_amount'] = $this->enDigits($opinion['land_amount']);
+                }
+                if (isset($opinion['total_land_in_plot'])) {
+                    $opinion['total_land_in_plot'] = $this->enDigits($opinion['total_land_in_plot']);
+                }
+                if (isset($opinion['land_in_khatian'])) {
+                    $opinion['land_in_khatian'] = $this->enDigits($opinion['land_in_khatian']);
+                }
+            }
+        }
+        
         return $data;
     }
-
+    
     /**
      * Process ownership details
      */

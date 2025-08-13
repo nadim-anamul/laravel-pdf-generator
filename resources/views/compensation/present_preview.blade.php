@@ -48,8 +48,8 @@
 
         <!-- Case Info -->
         <div class="flex justify-between mb-1">
-          <span>মামলার ধরন: ক্ষতিপূরণ কেস নং: {{ $compensation->case_number ?? 'N/A' }}</span> 
-          <span>এল.এ কেস: {{ $compensation->la_case_no ?? 'N/A' }}</span>
+          <span>মামলার ধরন: ক্ষতিপূরণ কেস নং: {{ $compensation->bnDigits($compensation->case_number ?? 'N/A') }}</span> 
+          <span>এল.এ কেস: {{ $compensation->bnDigits($compensation->la_case_no ?? 'N/A') }}</span>
         </div>
 
         <!-- Orders Table with wide second column -->
@@ -80,9 +80,9 @@
                 <br>
                 <p>উপজেলা: {{ $compensation->upazila ?? 'N/A' }}</p>
                 <p>মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
-                <p>জেএল নং: {{ $compensation->jl_no ?? 'N/A' }}</p>
-                <p>খতিয়ান নং: {{ $compensation->sa_khatian_no ?? $compensation->rs_khatian_no ?? 'N/A' }}</p>
-                <p>দাগ নং: {{ $compensation->plot_no ?? 'N/A' }}</p>
+                <p>জেএল নং: {{ $compensation->bnDigits($compensation->jl_no ?? 'N/A') }}</p>
+                <p>খতিয়ান নং: {{ $compensation->bnDigits($compensation->sa_khatian_no ?? $compensation->rs_khatian_no ?? 'N/A') }}</p>
+                <p>দাগ নং: {{ $compensation->bnDigits($compensation->plot_no ?? 'N/A') }}</p>
                 <p>আবেদনকৃত ক্ষতিপূরণের ধরণ: 
                     @if($compensation->award_type && is_array($compensation->award_type))
                         {{ implode(', ', $compensation->award_type) }}
@@ -94,28 +94,28 @@
                     $total_land = isset($compensation->total_land_amount) ? $compensation->total_land_amount : 'N/A';
                     $applicant_acquired_land = isset($compensation->applicant_acquired_land) ? $compensation->applicant_acquired_land : 'N/A';
                 @endphp
-                <p>অধিগ্রহণকৃত জমির পরিমাণ (একরে): {{ $total_land }}</p>
-                <p>দাবীকৃত জমির পরিমাণ (একরে): {{ $applicant_acquired_land }}</p>
+                <p>অধিগ্রহণকৃত জমির পরিমাণ (একরে): {{ $compensation->bnDigits($total_land) }}</p>
+                <p>দাবীকৃত জমির পরিমাণ (একরে): {{ $compensation->bnDigits($applicant_acquired_land) }}</p>
                 
                 <br>
-                <p>আবেদিত জমি {{ $compensation->la_case_no ?? 'N/A' }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
+                <p>আবেদিত জমি {{ $compensation->bnDigits($compensation->la_case_no ?? 'N/A') }} নং এল.এ কেসে অধিগ্রহণ করা হয়েছে। উক্ত জমির ক্ষতিপূরণ বাবদ 
                     @if($compensation->award_type && is_array($compensation->award_type))
                         @if(in_array('জমি', $compensation->award_type) && in_array('গাছপালা/ফসল', $compensation->award_type))
                             @if($compensation->land_award_serial_no && $compensation->tree_award_serial_no)
-                                জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }} এবং গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
+                                জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no) }} এবং গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->bnDigits($compensation->tree_award_serial_no) }}
                             @elseif($compensation->land_award_serial_no)
-                                জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }}
+                                জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no) }}
                             @elseif($compensation->tree_award_serial_no)
-                                গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
+                                গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->bnDigits($compensation->tree_award_serial_no) }}
                             @else
                                 N/A
                             @endif
                         @elseif(in_array('জমি', $compensation->award_type) && $compensation->land_award_serial_no)
-                            জমির রোয়েদাদ নং {{ $compensation->land_award_serial_no }}
+                            জমির রোয়েদাদ নং {{ $compensation->bnDigits($compensation->land_award_serial_no) }}
                         @elseif(in_array('গাছপালা/ফসল', $compensation->award_type) && $compensation->tree_award_serial_no)
-                            গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->tree_award_serial_no }}
+                            গাছপালা/ফসলের রোয়েদাদ নং {{ $compensation->bnDigits($compensation->tree_award_serial_no) }}
                         @elseif(in_array('অবকাঠামো', $compensation->award_type) && $compensation->infrastructure_award_serial_no)
-                            অবকাঠামোর রোয়েদাদ নং {{ $compensation->infrastructure_award_serial_no }}
+                            অবকাঠামোর রোয়েদাদ নং {{ $compensation->bnDigits($compensation->infrastructure_award_serial_no) }}
                         @else
                             N/A
                         @endif

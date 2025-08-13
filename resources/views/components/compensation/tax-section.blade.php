@@ -11,7 +11,8 @@
         </div>
         <div class="floating-label">
             <input type="text" name="tax_info[paid_land_amount]" value="{{ old('tax_info.paid_land_amount', isset(
-                $compensation) ? $compensation->tax_info['paid_land_amount'] ?? '' : '') }}" placeholder=" ">
+                $compensation) ? $compensation->tax_info['paid_land_amount'] ?? '' : '') }}" 
+                   placeholder=" " pattern="[০-৯0-9\.]+" title="শুধুমাত্র সংখ্যা এবং দশমিক বিন্দু অনুমোদিত">
             <label>আবেদনকৃত দাগে খাজনা প্রদানকৃত জমির পরিমান (একর)<span class="text-blue-500">*</span></label>
         </div>
         <div class="floating-label">

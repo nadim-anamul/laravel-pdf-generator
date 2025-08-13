@@ -13,14 +13,29 @@ trait BengaliDateTrait
             return null;
         }
 
-        $date = \Carbon\Carbon::parse($englishDate);
-        
-        // Convert day, month, year to Bengali numerals with proper padding
-        $day = $this->convertToBengaliNumerals(str_pad($date->day, 2, '0', STR_PAD_LEFT));
-        $month = $this->convertToBengaliNumerals(str_pad($date->month, 2, '0', STR_PAD_LEFT));
-        $year = $this->convertToBengaliNumerals($date->year);
-        
-        return $day . '/' . $month . '/' . $year;
+        // If the date is already in Bengali format, return it as-is
+        if (preg_match('/^[০-৯]+\/[০-৯]+\/[০-৯]+$/', $englishDate)) {
+            return $englishDate;
+        }
+
+        // If the date contains Bengali numerals but is in Y-m-d format, convert numerals first
+        if (preg_match('/[০-৯]/u', $englishDate)) {
+            $englishDate = $this->enDigits($englishDate);
+        }
+
+        try {
+            $date = \Carbon\Carbon::parse($englishDate);
+            
+            // Convert day, month, year to Bengali numerals with proper padding
+            $day = $this->convertToBengaliNumerals(str_pad($date->day, 2, '0', STR_PAD_LEFT));
+            $month = $this->convertToBengaliNumerals(str_pad($date->month, 2, '0', STR_PAD_LEFT));
+            $year = $this->convertToBengaliNumerals($date->year);
+            
+            return $day . '/' . $month . '/' . $year;
+        } catch (\Exception $e) {
+            // If parsing fails, return the original value
+            return $englishDate;
+        }
     }
 
     /**
@@ -32,6 +47,10 @@ trait BengaliDateTrait
         $bengaliNumerals = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
         return str_replace($englishNumerals, $bengaliNumerals, (string)$number);
     }
+
+
+
+
 
     /**
      * Public helper: Convert any string or number's digits to Bengali.

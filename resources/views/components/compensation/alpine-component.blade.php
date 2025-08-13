@@ -235,6 +235,21 @@
             },
             removeLandCategory(index) {
                 this.land_category.splice(index, 1);
+            },
+            
+            // Number validation function for Bengali/English numerals
+            validateNumberInput(value) {
+                if (!value) return true;
+                // Allow Bengali numerals (০-৯), English numerals (0-9), and decimal point
+                const pattern = /^[০-৯0-9\.]+$/;
+                return pattern.test(value);
+            },
+            
+            // Convert input to valid number format
+            formatNumberInput(value) {
+                if (!value) return '';
+                // Remove any invalid characters
+                return value.replace(/[^০-৯0-9\.]/g, '');
             }
         });
     });

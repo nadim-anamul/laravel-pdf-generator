@@ -42,11 +42,11 @@
         <div class="grid grid-cols-2 gap-5 mb-5">
             <div>
                 <p class="mb-1">প্রসেস নং:</p>
-                <p class="mb-1">ক্ষতিপূরণ কেস নং: {{ $compensation->case_number ?? 'N/A' }}</p>
+                <p class="mb-1">ক্ষতিপূরণ কেস নং: {{ $compensation->getBengaliValue('case_number') ?? 'N/A' }}</p>
             </div>
             <div class="flex flex-col items-center">
                 <p class="mb-1">তারিখ: ............................</p>
-                <p class="mb-1">এল.এ কেস নং: {{ $compensation->la_case_no ?? 'N/A' }}</p>
+                <p class="mb-1">এল.এ কেস নং: {{ $compensation->getBengaliValue('la_case_no') ?? 'N/A' }}</p>
             </div>
         </div>
 
@@ -67,7 +67,7 @@
                                     <strong class="text-blue-600">#{{ $index + 1 }}:</strong><br>
                                     {{ $applicant['name'] ?? 'N/A' }}<br>
                                     পিতার নাম- {{ $applicant['father_name'] ?? 'N/A' }}<br>
-                                    সাং- {{ $applicant['address'] ?? 'N/A' }}@if(isset($applicant['mobile']) && $applicant['mobile'])<br>মোবাইল- {{ $applicant['mobile'] }}@endif
+                                    সাং- {{ $applicant['address'] ?? 'N/A' }}@if(isset($applicant['mobile']) && $applicant['mobile'])<br>মোবাইল- {{ $compensation->bnDigits($applicant['mobile']) }}@endif
                                 @endforeach
                             @else
                                 <span class="text-gray-500">কোন আবেদনকারী নেই</span>
@@ -114,9 +114,9 @@
                 @if($compensation->land_category && is_array($compensation->land_category) && count($compensation->land_category) > 0)
                     @foreach($compensation->land_category as $category)
                     <tr>
-                        <td class="border border-black p-2">{{ $compensation->sa_khatian_no ?? $compensation->rs_khatian_no ?? 'N/A' }}</td>
-                        <td class="border border-black p-2">{{ $compensation->plot_no ?? 'N/A' }}</td>
-                        <td class="border border-black p-2">{{ $category['total_land'] ?? 'N/A' }}</td>
+                        <td class="border border-black p-2">{{ $compensation->getBengaliValue('sa_khatian_no') ?? $compensation->getBengaliValue('rs_khatian_no') ?? 'N/A' }}</td>
+                        <td class="border border-black p-2">{{ $compensation->getBengaliValue('plot_no') ?? 'N/A' }}</td>
+                        <td class="border border-black p-2">{{ $compensation->bnDigits($category['total_land'] ?? 'N/A') }}</td>
                         <td class="border border-black p-2">
                             @if($compensation->award_type && is_array($compensation->award_type))
                                 {{ implode(', ', $compensation->award_type) }}
@@ -128,8 +128,8 @@
                     @endforeach
                 @else
                 <tr>
-                    <td class="border border-black p-2">{{ $compensation->sa_khatian_no ?? $compensation->rs_khatian_no ?? 'N/A' }}</td>
-                    <td class="border border-black p-2">{{ $compensation->plot_no ?? 'N/A' }}</td>
+                    <td class="border border-black p-2">{{ $compensation->getBengaliValue('sa_khatian_no') ?? $compensation->getBengaliValue('rs_khatian_no') ?? 'N/A' }}</td>
+                    <td class="border border-black p-2">{{ $compensation->getBengaliValue('plot_no') ?? 'N/A' }}</td>
                     <td class="border border-black p-2">N/A</td>
                     <td class="border border-black p-2">
                         @if($compensation->award_type && is_array($compensation->award_type))

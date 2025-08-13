@@ -10,15 +10,15 @@
         <div class="case-summary">
             <div class="summary-item">
                 <span class="summary-label">মামলা নং:</span>
-                <span class="summary-value">{{ $compensation->case_number }}</span>
+                <span class="summary-value">{{ $compensation->getBengaliValue('case_number') }}</span>
             </div>
             <div class="summary-item">
                 <span class="summary-label">তারিখ:</span>
-                <span class="summary-value">{{ $compensation->case_date }}</span>
+                <span class="summary-value">{{ $compensation->case_date_bengali }}</span>
             </div>
             <div class="summary-item">
                 <span class="summary-label">এলএ কেস:</span>
-                <span class="summary-value">{{ $compensation->la_case_no }}</span>
+                <span class="summary-value">{{ $compensation->getBengaliValue('la_case_no') }}</span>
             </div>
         </div>
     </div>
@@ -31,32 +31,32 @@
         <div class="info-grid">
             <div class="info-item">
                 <label>মামলা নম্বর:</label>
-                <span>{{ $compensation->case_number }}</span>
+                <span>{{ $compensation->getBengaliValue('case_number') }}</span>
             </div>
             <div class="info-item">
                 <label>মামলার তারিখ:</label>
-                <span>{{ $compensation->case_date }}</span>
+                <span>{{ $compensation->case_date_bengali }}</span>
             </div>
             <div class="info-item">
                 <label>এলএ কেস নং:</label>
-                <span>{{ $compensation->la_case_no }}</span>
+                <span>{{ $compensation->getBengaliValue('la_case_no') }}</span>
             </div>
             @if($compensation->land_award_serial_no)
             <div class="info-item">
                 <label>জমির রোয়েদাদ নং:</label>
-                <span>{{ $compensation->land_award_serial_no }}</span>
+                <span>{{ $compensation->getBengaliValue('land_award_serial_no') }}</span>
             </div>
             @endif
             @if($compensation->tree_award_serial_no)
             <div class="info-item">
                 <label>গাছপালার রোয়েদাদ নং:</label>
-                <span>{{ $compensation->tree_award_serial_no }}</span>
+                <span>{{ $compensation->getBengaliValue('tree_award_serial_no') }}</span>
             </div>
             @endif
             @if($compensation->infrastructure_award_serial_no)
             <div class="info-item">
                 <label>অবকাঠামোর রোয়েদাদ নং:</label>
-                <span>{{ $compensation->infrastructure_award_serial_no }}</span>
+                <span>{{ $compensation->getBengaliValue('infrastructure_award_serial_no') }}</span>
             </div>
             @endif
             <div class="info-item">
@@ -65,7 +65,7 @@
             </div>
             <div class="info-item">
                 <label>দাগ নং:</label>
-                <span>{{ $compensation->plot_no }}</span>
+                <span>{{ $compensation->getBengaliValue('plot_no') }}</span>
             </div>
         </div>
     </div>
@@ -98,12 +98,12 @@
                 <div class="info-row">
                     <div class="info-col">
                         <label>এন আই ডি:</label>
-                        <span>{{ $applicant['nid'] }}</span>
+                        <span>{{ $compensation->bnDigits($applicant['nid']) }}</span>
                     </div>
                     @if(isset($applicant['mobile']) && $applicant['mobile'])
                     <div class="info-col">
                         <label>মোবাইল নং:</label>
-                        <span>{{ $applicant['mobile'] }}</span>
+                        <span>{{ $compensation->bnDigits($applicant['mobile']) }}</span>
                     </div>
                     @endif
                 </div>
@@ -131,7 +131,7 @@
                                     $totalLand += floatval($category['total_land'] ?? 0);
                                 }
                             }
-                            echo number_format($totalLand, 6) . ' একর';
+                            echo $compensation->bnDigits(number_format($totalLand, 6)) . ' একর';
                         @endphp
                     </span>
                 </div>
@@ -145,13 +145,13 @@
                                     $totalCompensation += floatval($category['total_compensation'] ?? 0);
                                 }
                             }
-                            echo number_format($totalCompensation, 2) . ' টাকা';
+                            echo $compensation->bnDigits(number_format($totalCompensation, 2)) . ' টাকা';
                         @endphp
                     </span>
                 </div>
                 <div class="summary-box">
                     <label>উৎস কর %:</label>
-                    <span>{{ $compensation->source_tax_percentage }}</span>
+                    <span>{{ $compensation->getBengaliValue('source_tax_percentage') }}</span>
                 </div>
                 <div class="summary-box">
                     <label>আবেদনকারী রোয়েদাদে আছে:</label>
@@ -216,7 +216,7 @@
                 @if($compensation->applicant_acquired_land)
                 <div class="compensation-item">
                     <label>আবেদনকারীর অধিগ্রহণকৃত জমি:</label>
-                    <span class="highlight-value">{{ $compensation->applicant_acquired_land }}</span>
+                    <span class="highlight-value">{{ $compensation->bnDigits($compensation->applicant_acquired_land) }}</span>
                 </div>
                 @endif
             </div>
@@ -241,9 +241,9 @@
                         @foreach($compensation->land_category as $category)
                         <tr>
                             <td>{{ $category['category_name'] ?? '' }}</td>
-                            <td>{{ $category['total_land'] ?? '' }} একর</td>
-                            <td>{{ $category['total_compensation'] ?? '' }}</td>
-                            <td>{{ $category['applicant_land'] ? $category['applicant_land'] . ' একর' : 'তথ্য নেই' }}</td>
+                            <td>{{ $compensation->bnDigits($category['total_land'] ?? '') }} একর</td>
+                            <td>{{ $compensation->bnDigits($category['total_compensation'] ?? '') }}</td>
+                            <td>{{ $category['applicant_land'] ? $compensation->bnDigits($category['applicant_land']) . ' একর' : 'তথ্য নেই' }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -267,11 +267,11 @@
                 <div class="info-row">
                     <div class="info-col">
                         <label>SA দাগ নং:</label>
-                        <span>{{ $compensation->sa_plot_no }}</span>
+                        <span>{{ $compensation->getBengaliValue('sa_plot_no') }}</span>
                     </div>
                     <div class="info-col">
                         <label>SA খতিয়ান নং:</label>
-                        <span>{{ $compensation->sa_khatian_no }}</span>
+                        <span>{{ $compensation->getBengaliValue('sa_khatian_no') }}</span>
                     </div>
                 </div>
             </div>
@@ -283,11 +283,11 @@
                 <div class="info-row">
                     <div class="info-col">
                         <label>RS দাগ নং:</label>
-                        <span>{{ $compensation->rs_plot_no }}</span>
+                        <span>{{ $compensation->getBengaliValue('rs_plot_no') }}</span>
                     </div>
                     <div class="info-col">
                         <label>RS খতিয়ান নং:</label>
-                        <span>{{ $compensation->rs_khatian_no }}</span>
+                        <span>{{ $compensation->getBengaliValue('rs_khatian_no') }}</span>
                     </div>
                 </div>
             </div>
@@ -326,7 +326,7 @@
                     </div>
                     <div class="info-col">
                         <label>জেএল নং:</label>
-                        <span>{{ $compensation->jl_no }}</span>
+                        <span>{{ $compensation->getBengaliValue('jl_no') }}</span>
                     </div>
                 </div>
             </div>
@@ -335,21 +335,21 @@
                 <div class="info-row">
                     <div class="info-col">
                         <label>এসএ খতিয়ান নং:</label>
-                        <span>{{ $compensation->sa_khatian_no }}</span>
+                        <span>{{ $compensation->getBengaliValue('sa_khatian_no') }}</span>
                     </div>
                     <div class="info-col">
                         <label>SA দাগ নং:</label>
-                        <span>{{ $compensation->land_schedule_sa_plot_no }}</span>
+                        <span>{{ $compensation->getBengaliValue('land_schedule_sa_plot_no') }}</span>
                     </div>
                 </div>
                 <div class="info-row">
                     <div class="info-col">
                         <label>আর এস খতিয়ান নং:</label>
-                        <span>{{ $compensation->rs_khatian_no }}</span>
+                        <span>{{ $compensation->getBengaliValue('rs_khatian_no') }}</span>
                     </div>
                     <div class="info-col">
                         <label>RS দাগ নং:</label>
-                        <span>{{ $compensation->land_schedule_rs_plot_no }}</span>
+                        <span>{{ $compensation->getBengaliValue('land_schedule_rs_plot_no') }}</span>
                     </div>
                 </div>
             </div>
@@ -395,11 +395,11 @@
                 </div>
                 <div class="info-item">
                     <label>SA দাগে মোট জমি:</label>
-                    <span>{{ $compensation->ownership_details['sa_info']['sa_total_land_in_plot'] ?? '' }}</span>
+                                            <span>{{ $compensation->bnDigits($compensation->ownership_details['sa_info']['sa_total_land_in_plot'] ?? '') }}</span>
                 </div>
                 <div class="info-item">
                     <label>SA উক্ত খতিয়ানে জমির পরিমাণ:</label>
-                    <span>{{ $compensation->ownership_details['sa_info']['sa_land_in_khatian'] ?? '' }}</span>
+                    <span>{{ $compensation->getBengaliNestedValue('ownership_details.sa_info.sa_land_in_khatian') ?? '' }}</span>
                 </div>
             </div>
             
@@ -428,7 +428,7 @@
                 </div>
                 <div class="info-item">
                     <label>RS দাগে মোট জমি:</label>
-                    <span>{{ $compensation->ownership_details['rs_info']['rs_total_land_in_plot'] ?? '' }}</span>
+                                            <span>{{ $compensation->bnDigits($compensation->ownership_details['rs_info']['rs_total_land_in_plot'] ?? '') }}</span>
                 </div>
                 <div class="info-item">
                     <label>RS খতিয়ানে মোট জমির পরিমাণ:</label>
@@ -597,7 +597,7 @@
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস জমির পরিমাণ:</label>
-                                    <p class="text-gray-900">{{ $rs['land_amount'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['land_amount'] ?? '') }}</p>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="font-semibold text-gray-700">আরএস মালিকের নাম:</label>
@@ -751,7 +751,7 @@
                                 </div>
                                 <div>
                                     <label class="font-semibold text-gray-700">আরএস জমির পরিমাণ:</label>
-                                    <p class="text-gray-900">{{ $rs['land_amount'] ?? '' }}</p>
+                                    <p class="text-gray-900">{{ $compensation->bnDigits($rs['land_amount'] ?? '') }}</p>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="font-semibold text-gray-700">আরএস মালিকের নাম:</label>
@@ -946,7 +946,7 @@
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজ জমির পরিমাণ:</label>
-                    <p class="text-gray-900">{{ $compensation->ownership_details['applicant_info']['kharij_land_amount'] ?? '' }}</p>
+                                                    <p class="text-gray-900">{{ $compensation->bnDigits($compensation->ownership_details['applicant_info']['kharij_land_amount'] ?? '') }}</p>
                 </div>
                 <div>
                     <label class="font-semibold text-gray-700">খারিজের তারিখ:</label>
@@ -979,7 +979,7 @@
             <div class="info-item">
                 <label>আবেদনকৃত দাগে খাজনা প্রদানকৃত জমির পরিমান (একরে):</label>
                 @if(!empty($compensation->tax_info['paid_land_amount'] ?? ''))
-                    <span>{{ $compensation->tax_info['paid_land_amount'] }}</span>
+                                                <span>{{ $compensation->bnDigits($compensation->tax_info['paid_land_amount']) }}</span>
                 @else
                     <span class="no-data">তথ্য নেই</span>
                 @endif
@@ -1258,7 +1258,7 @@
                 <p class="analysis-text">
                     আবেদনকারী 
                     @if($compensation->applicants && is_array($compensation->applicants))
-                        {{ count($compensation->applicants) }} জন।
+                        {{ $compensation->bnDigits(count($compensation->applicants)) }} জন।
                     @else
                         ১ জন।
                     @endif
@@ -1270,7 +1270,7 @@
                 <p class="text-gray-800">
                     রোয়েদাদভুক্ত মালিক 
                     @if($compensation->award_holder_names && is_array($compensation->award_holder_names))
-                        {{ count($compensation->award_holder_names) }} জন।
+                        {{ $compensation->bnDigits(count($compensation->award_holder_names)) }} জন।
                     @else
                         ১ জন।
                     @endif
@@ -1347,7 +1347,7 @@
                     @endphp
                     
                     @if($hasTaxInfo)
-                        ইংরেজি {{ $compensation->tax_info['english_year'] }} এবং বাংলা {{ $compensation->tax_info['bangla_year'] }} সন পর্যন্ত {{ $compensation->tax_info['paid_land_amount'] }} একর জমির খাজনা পরিশোধ করা হয়েছে।
+                        ইংরেজি {{ $compensation->tax_info['english_year'] }} এবং বাংলা {{ $compensation->tax_info['bangla_year'] }} সন পর্যন্ত {{ $compensation->bnDigits($compensation->tax_info['paid_land_amount']) }} একর জমির খাজনা পরিশোধ করা হয়েছে।
                     @else
                         উল্লিখিত দাগে খাজনার রশিদ দাখিল করা হয়নাই
                     @endif
@@ -1381,7 +1381,7 @@
             @endphp
             <div class="analysis-item">
                 <p class="analysis-text">
-                    আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত {{ $total_land }} একর জমির মধ্যে {{ $applicant_acquired_land }} একরের ক্ষতিপূরণ দাবী করেন।
+                    আবেদনকারী উল্লিখিত দাগে অধিগ্রহণকৃত {{ $compensation->bnDigits($total_land) }} একর জমির মধ্যে {{ $compensation->bnDigits($applicant_acquired_land) }} একরের ক্ষতিপূরণ দাবী করেন।
                 </p>
             </div>
             @endif

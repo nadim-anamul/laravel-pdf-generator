@@ -68,10 +68,10 @@
                             <p class="text-gray-900 whitespace-no-wrap">{{ $item->id }}</p>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ $item->case_number }}</p>
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $item->getBengaliValue('case_number') }}</p>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ $item->la_case_no }}</p>
+                            <p class="text-gray-900 whitespace-no-wrap">{{ $item->getBengaliValue('la_case_no') }}</p>
                         </td>
                         
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -93,11 +93,11 @@
                         <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">
                                 @if($item->acquisition_record_basis === 'SA')
-                                    {{ $item->land_schedule_sa_plot_no }}
+                                    {{ $item->getBengaliValue('land_schedule_sa_plot_no') }}
                                 @elseif($item->acquisition_record_basis === 'RS')
-                                    {{ $item->land_schedule_rs_plot_no }}
+                                    {{ $item->getBengaliValue('land_schedule_rs_plot_no') }}
                                 @else
-                                    {{ $item->jl_no }}
+                                    {{ $item->getBengaliValue('jl_no') }}
                                 @endif
                             </p>
                         </td>

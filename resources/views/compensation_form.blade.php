@@ -554,7 +554,7 @@
     @endif
 
     <form action="{{ isset($compensation) ? route('compensation.update', $compensation->id) : route('compensation.store') }}" method="POST" class="form-container p-8" x-data="compensationForm()" 
-          data-compensation="{{ isset($compensation) ? $compensation->toJson() : 'null' }}">
+          data-compensation="{{ isset($compensation) ? json_encode($compensation->toBengaliDisplayArray()) : 'null' }}">
         @csrf
         @if(isset($compensation))
             @method('PUT')

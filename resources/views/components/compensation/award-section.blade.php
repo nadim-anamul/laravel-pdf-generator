@@ -135,7 +135,7 @@
             </div>
         </div>
         <div class="floating-label">
-            <input type="number" name="source_tax_percentage" value="{{ old('source_tax_percentage', isset($compensation) ? $compensation->source_tax_percentage : '') }}" placeholder=" " required min="0" max="100" step="0.000001">
+            <input type="text" name="source_tax_percentage" value="{{ old('source_tax_percentage', isset($compensation) ? $compensation->source_tax_percentage : '') }}" placeholder=" " required pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
             <label>উৎস কর %<span class="text-red-500">*</span></label>
         </div>
         <div>
@@ -176,35 +176,35 @@
                                     <label>জমির শ্রেণী<span class="text-red-500">*</span></label>
                                 </div>
                                 <div class="floating-label">
-                                    <input type="number" 
+                                    <input type="text" 
                                            :name="'land_category[' + index + '][total_land]'" 
                                            x-model="category.total_land" 
                                            placeholder="মোট জমির পরিমাণ" 
                                            class="form-input w-full" 
                                            required
-                                           min="0"
-                                           step="0.000001">
+                                           pattern="[০-৯0-9\.]+"
+                                           @input="formatNumberInput($event.target.value, $event.target)">
                                     <label>মোট জমির পরিমাণ (একর)<span class="text-red-500">*</span></label>
                                 </div>
                                 <div class="floating-label">
-                                    <input type="number" 
+                                    <input type="text" 
                                            :name="'land_category[' + index + '][total_compensation]'" 
                                            x-model="category.total_compensation" 
                                            placeholder="মোট ক্ষতিপূরণ" 
                                            class="form-input w-full" 
                                            required
-                                           min="0"
-                                           step="0.000001">
+                                           pattern="[০-৯0-9\.]+"
+                                           @input="formatNumberInput($event.target.value, $event.target)">
                                     <label>মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
                                 </div>
                                 <div class="floating-label">
-                                    <input type="number" 
+                                    <input type="text" 
                                            :name="'land_category[' + index + '][applicant_land]'" 
                                            x-model="category.applicant_land" 
                                            placeholder="আবেদনকারীর জমি" 
                                            class="form-input w-full"
-                                           min="0"
-                                           step="0.000001">
+                                           pattern="[০-৯0-9\.]+"
+                                           @input="formatNumberInput($event.target.value, $event.target)">
                                     <label>আবেদনকারীর অধিগ্রহণকৃত জমি (একর)<span class="text-blue-500">*</span></label>
                                 </div>
                                 <button type="button" 
@@ -239,7 +239,7 @@
                         <label>গাছপালা/ফসলের রোয়েদাদ নং<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" name="tree_compensation" value="{{ old('tree_compensation', isset($compensation) ? $compensation->tree_compensation : '') }}" placeholder=" " required min="0" step="0.000001">
+                        <input type="text" name="tree_compensation" value="{{ old('tree_compensation', isset($compensation) ? $compensation->tree_compensation : '') }}" placeholder=" " required pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
                         <label>গাছপালা/ফসলের মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
                     </div>
                 </div>
@@ -259,7 +259,7 @@
                         <label>অবকাঠামোর রোয়েদাদ নং<span class="text-red-500">*</span></label>
                     </div>
                     <div class="floating-label">
-                        <input type="number" name="infrastructure_compensation" value="{{ old('infrastructure_compensation', isset($compensation) ? $compensation->infrastructure_compensation : '') }}" placeholder=" " required min="0" step="0.000001">
+                        <input type="text" name="infrastructure_compensation" value="{{ old('infrastructure_compensation', isset($compensation) ? $compensation->infrastructure_compensation : '') }}" placeholder=" " required pattern="[০-৯0-9\.]+" @input="formatNumberInput($event.target.value, $event.target)">
                         <label>অবকাঠামোর মোট ক্ষতিপূরণ<span class="text-red-500">*</span></label>
                     </div>
                 </div>

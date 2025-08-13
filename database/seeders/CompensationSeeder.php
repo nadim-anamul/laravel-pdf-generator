@@ -59,7 +59,7 @@ class CompensationSeeder extends Seeder
                     'english_year' => '2024-25',
                     'bangla_year' => '১৪৩১-৩২',
                     'holding_no' => 'HOLD-' . fake()->numberBetween(100, 999),
-                    'paid_land_amount' => fake()->randomFloat(2, 0.5, 5)
+                    'paid_land_amount' => '১.৫০'
                 ],
                 'additional_documents_info' => [
                     'selected_types' => ['আপস- বন্টননামা', 'না-দাবি', 'সরেজমিন তদন্ত', 'এফিডেভিট'],
@@ -73,9 +73,9 @@ class CompensationSeeder extends Seeder
                 'land_category' => [
                     [
                         'category_name' => 'ধানী জমি',
-                        'total_land' => '1.00',
-                        'total_compensation' => '100000',
-                        'applicant_land' => '1.00'
+                        'total_land' => '১.০০',
+                        'total_compensation' => '১০০০০০',
+                        'applicant_land' => '১.০০'
                     ]
                 ],
             ];
@@ -92,9 +92,9 @@ class CompensationSeeder extends Seeder
                 'land_category' => [
                     [
                         'category_name' => 'ধানী জমি',
-                        'total_land' => '1.00',
-                        'total_compensation' => '100000',
-                        'applicant_land' => '1.00'
+                        'total_land' => '১.০০',
+                        'total_compensation' => '১০০০০০',
+                        'applicant_land' => '১.০০'
                     ]
                 ],
             ];
@@ -199,9 +199,9 @@ class CompensationSeeder extends Seeder
                 ],
                 [
                     'category_name' => 'বাগান জমি',
-                    'total_land' => '0.50',
-                    'total_compensation' => '80000.25',
-                    'applicant_land' => '0.50'
+                    'total_land' => '০.৫০',
+                    'total_compensation' => '৮০০০০.২৫',
+                    'applicant_land' => '০.৫০'
                 ]
             ],
             'is_applicant_in_award' => true,
@@ -216,8 +216,8 @@ class CompensationSeeder extends Seeder
                 'sa_info' => [
                     'sa_plot_no' => 'SA-150',
                     'sa_khatian_no' => '302',
-                    'sa_total_land_in_plot' => '3.25',
-                    'sa_land_in_khatian' => '2.25'
+                    'sa_total_land_in_plot' => '৩.২৫',
+                    'sa_land_in_khatian' => '২.২৫'
                 ],
                 'sa_owners' => [['name' => 'মোছাঃ ফাতেমা খাতুন']],
                 'deed_transfers' => [
@@ -229,7 +229,7 @@ class CompensationSeeder extends Seeder
                         'sale_type' => 'দান দলিল',
                         'application_type' => 'specific',
                         'application_specific_area' => 'SA-150',
-                        'application_sell_area' => '2.25',
+                        'application_sell_area' => '২.২৫',
                         'application_other_areas' => null,
                         'application_total_area' => null,
                         'application_sell_area_other' => null,
@@ -245,7 +245,7 @@ class CompensationSeeder extends Seeder
                 'rs_records' => [],
                 'applicant_info' => [
                     'applicant_name' => 'মোছাঃ ফাতেমা খাতুন',
-                    'kharij_land_amount' => '2.25'
+                    'kharij_land_amount' => '২.২৫'
                 ],
                 'storySequence' => [
                     [
@@ -262,7 +262,7 @@ class CompensationSeeder extends Seeder
             ],
             'tax_info' => [
                 'holding_no' => '1002',
-                'paid_land_amount' => '2.25',
+                'paid_land_amount' => '২.২৫',
                 'english_year' => '2024',
                 'bangla_year' => '১৪৩১'
             ]

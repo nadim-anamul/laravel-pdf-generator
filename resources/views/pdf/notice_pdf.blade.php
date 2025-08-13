@@ -91,11 +91,11 @@
             <div class="grid grid-cols-2 gap-5 mb-5">
                 <div>
                     <p class="mb-1">প্রসেস নং:</p>
-                    <p class="mb-1">ক্ষতিপূরণ কেস নং: {{ $compensation->case_number ?? 'N/A' }}</p>
+                    <p class="mb-1">ক্ষতিপূরণ কেস নং: {{ $compensation->getBengaliValue('case_number') ?? 'N/A' }}</p>
                 </div>
                 <div class="flex flex-col items-center">
                     <p class="mb-1">তারিখ: ............................</p>
-                    <p class="mb-1">এল.এ কেস নং: {{ $compensation->la_case_no ?? 'N/A' }}</p>
+                    <p class="mb-1">এল.এ কেস নং: {{ $compensation->getBengaliValue('la_case_no') ?? 'N/A' }}</p>
                 </div>
             </div>
 
@@ -165,7 +165,7 @@
                         <tr>
                             <td>{{ $compensation->sa_khatian_no ?? $compensation->rs_khatian_no ?? 'N/A' }}</td>
                             <td>{{ $compensation->plot_no ?? 'N/A' }}</td>
-                            <td>{{ $category['total_land'] ?? 'N/A' }}</td>
+                            <td>{{ $compensation->bnDigits($category['total_land'] ?? 'N/A') }}</td>
                             <td>
                                 @if($compensation->award_type && is_array($compensation->award_type))
                                     {{ implode(', ', $compensation->award_type) }}

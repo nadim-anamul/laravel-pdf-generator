@@ -64,8 +64,8 @@
 
     <!-- Case Info -->
     <div class="flex justify-between mb-1">
-      <span>মামলার ধরন: ক্ষতিপূরণ কেস নং: {{ $compensation->case_number ?? 'N/A' }}</span> 
-      <span>এল.এ কেস: {{ $compensation->la_case_no ?? 'N/A' }}</span>
+      <span>মামলার ধরন: ক্ষতিপূরণ কেস নং: {{ $compensation->getBengaliValue('case_number') ?? 'N/A' }}</span> 
+      <span>এল.এ কেস: {{ $compensation->getBengaliValue('la_case_no') ?? 'N/A' }}</span>
     </div>
 
     <!-- Orders Table with wide second column -->
@@ -96,9 +96,9 @@
             <br>
             <p>উপজেলা: {{ $compensation->upazila ?? 'N/A' }}</p>
             <p>মৌজা: {{ $compensation->mouza_name ?? 'N/A' }}</p>
-            <p>জেএল নং: {{ $compensation->jl_no ?? 'N/A' }}</p>
-            <p>খতিয়ান নং: {{ $compensation->sa_khatian_no ?? $compensation->rs_khatian_no ?? 'N/A' }}</p>
-            <p>দাগ নং: {{ $compensation->plot_no ?? 'N/A' }}</p>
+            <p>জেএল নং: {{ $compensation->getBengaliValue('jl_no') ?? 'N/A' }}</p>
+            <p>খতিয়ান নং: {{ $compensation->getBengaliValue('sa_khatian_no') ?? $compensation->getBengaliValue('rs_khatian_no') ?? 'N/A' }}</p>
+            <p>দাগ নং: {{ $compensation->getBengaliValue('plot_no') ?? 'N/A' }}</p>
             <p>আবেদনকৃত ক্ষতিপূরণের ধরণ: 
                 @if($compensation->award_type && is_array($compensation->award_type))
                     {{ implode(', ', $compensation->award_type) }}
@@ -107,8 +107,8 @@
                 @endif
             </p>
             @php
-                $total_land = isset($compensation->total_land_amount) ? $compensation->total_land_amount : 'N/A';
-                $applicant_acquired_land = isset($compensation->applicant_acquired_land) ? $compensation->applicant_acquired_land : 'N/A';
+                $total_land = isset($compensation->total_land_amount) ? $compensation->bnDigits($compensation->total_land_amount) : 'N/A';
+                $applicant_acquired_land = isset($compensation->applicant_acquired_land) ? $compensation->bnDigits($compensation->applicant_acquired_land) : 'N/A';
             @endphp
             <p>অধিগ্রহণকৃত জমির পরিমাণ (একরে): {{ $total_land }}</p>
             <p>দাবীকৃত জমির পরিমাণ (একরে): {{ $applicant_acquired_land }}</p>
