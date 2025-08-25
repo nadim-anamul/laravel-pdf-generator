@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Compensation;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use App\Traits\BengaliDateTrait;
 use Spatie\Browsershot\Browsershot;
 use App\Services\PdfGeneratorService;
@@ -22,6 +23,7 @@ class CompensationController extends Controller
         $search = $request->get('search');
         
         $compensations = Compensation::query()
+            ->notDeleted() // Only show non-deleted compensations
             ->byStatus($status)
             ->when($search, function($query) use ($search) {
                 return $query->search($search);
@@ -79,6 +81,10 @@ class CompensationController extends Controller
         $validatedData = $this->validateCompensationData($request);
         $validatedData = $this->processCompensationData($validatedData);
         
+        // Add audit tracking
+        $validatedData['created_by'] = Auth::id();
+        $validatedData['updated_by'] = Auth::id();
+        
         $compensation = Compensation::create($validatedData);
 
         return redirect()->route('compensation.preview', $compensation->id)
@@ -103,6 +109,9 @@ class CompensationController extends Controller
         
         $validatedData = $this->validateCompensationData($request);
         $validatedData = $this->processCompensationData($validatedData);
+        
+        // Add audit tracking
+        $validatedData['updated_by'] = Auth::id();
         
         // Debug: Log the processed data
         Log::info('Processed compensation data:', [
@@ -136,6 +145,53 @@ class CompensationController extends Controller
 
         return redirect()->route('compensation.preview', $compensation->id)
             ->with('success', 'ক্ষতিপূরণ তথ্য সফলভাবে আপডেট করা হয়েছে।');
+    }
+
+    /**
+     * Soft delete the specified compensation (Super Admin only)
+     */
+    public function destroy(Request $request, $id)
+    {
+        // Check if user is super admin
+        if (!Auth::user()->is_super_user) {
+            abort(403, 'অনুমতি নেই। শুধুমাত্র সুপার অ্যাডমিন এই কাজটি করতে পারেন।');
+        }
+
+        $compensation = Compensation::findOrFail($id);
+        
+        // Validate deletion reason
+        $request->validate([
+            'deletion_reason' => 'required|string|max:500',
+        ], [
+            'deletion_reason.required' => 'ডিলিট করার কারণ প্রয়োজন',
+            'deletion_reason.max' => 'কারণ ৫০০ অক্ষরের বেশি হতে পারে না',
+        ]);
+
+        // Store case number for success message (before deletion)
+        $caseNumber = $compensation->case_number;
+        
+        // Soft delete with audit trail
+        $compensation->softDelete($request->deletion_reason, Auth::id());
+
+        return redirect()->route('compensation.index')
+            ->with('success', "ক্ষতিপূরণ কেস #{$caseNumber} সফলভাবে ডিলিট করা হয়েছে।");
+    }
+
+    /**
+     * Restore a soft deleted compensation (Super Admin only)
+     */
+    public function restore($id)
+    {
+        // Check if user is super admin
+        if (!Auth::user()->is_super_user) {
+            abort(403, 'অনুমতি নেই। শুধুমাত্র সুপার অ্যাডমিন এই কাজটি করতে পারেন।');
+        }
+
+        $compensation = Compensation::onlyDeleted()->findOrFail($id);
+        $compensation->restore();
+
+        return redirect()->route('compensation.index')
+            ->with('success', "ক্ষতিপূরণ কেস #{$compensation->case_number} সফলভাবে পুনরুদ্ধার করা হয়েছে।");
     }
 
     /**

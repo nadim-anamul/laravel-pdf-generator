@@ -24,7 +24,8 @@ class Compensation extends Model
         'land_schedule_sa_plot_no', 'rs_khatian_no', 'land_schedule_rs_plot_no', 
         'ownership_details', 'mutation_info', 'tax_info', 
         'additional_documents_info', 'kanungo_opinion',
-        'order_signature_date', 'signing_officer_name', 'order_comment', 'case_information', 'general_comments', 'status', 'final_order'
+        'order_signature_date', 'signing_officer_name', 'order_comment', 'case_information', 'general_comments', 'status', 'final_order',
+        'created_by', 'updated_by', 'deleted_by', 'deleted_at', 'deletion_reason'
     ];
 
     /**
@@ -44,6 +45,10 @@ class Compensation extends Model
         'additional_documents_info' => 'array',
         'kanungo_opinion' => 'array',
         'final_order' => 'array',
+        'deleted_at' => 'datetime',
+        'created_by' => 'integer',
+        'updated_by' => 'integer',
+        'deleted_by' => 'integer',
     ];
 
     /**
@@ -386,5 +391,75 @@ class Compensation extends Model
         });
     }
 
+    /**
+     * Get the user who created this compensation
+     */
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 
+    /**
+     * Get the user who last updated this compensation
+     */
+    public function updatedBy()
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * Get the user who deleted this compensation
+     */
+    public function deletedBy()
+    {
+        return $this->belongsTo(User::class, 'deleted_by');
+    }
+
+    /**
+     * Scope to get only non-deleted compensations
+     */
+    public function scopeNotDeleted($query)
+    {
+        return $query->whereNull('deleted_at');
+    }
+
+    /**
+     * Scope to get only deleted compensations
+     */
+    public function scopeOnlyDeleted($query)
+    {
+        return $query->whereNotNull('deleted_at');
+    }
+
+    /**
+     * Check if compensation is deleted
+     */
+    public function isDeleted(): bool
+    {
+        return !is_null($this->deleted_at);
+    }
+
+    /**
+     * Soft delete the compensation
+     */
+    public function softDelete($reason = null, $deletedBy = null)
+    {
+        $this->update([
+            'deleted_at' => now(),
+            'deleted_by' => $deletedBy,
+            'deletion_reason' => $reason,
+        ]);
+    }
+
+    /**
+     * Restore the soft deleted compensation
+     */
+    public function restore()
+    {
+        $this->update([
+            'deleted_at' => null,
+            'deleted_by' => null,
+            'deletion_reason' => null,
+        ]);
+    }
 }
